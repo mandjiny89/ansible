@@ -3,7 +3,7 @@
   yum:
     name: "{{item}}"
     state: latest
-  loop:
+  with_items:
     - mariadb
     - mariadb-server
     - python2-PyMySQL.noarch
@@ -16,44 +16,21 @@
     state: started
     enabled: yes
 
-- name: update mysql root password for all root accounts
-  mysql_user: 
-    name: root 
-    host: localhost 
-    password: database
-
-- name: update mysql root password for all root accounts
-  mysql_user: 
-    name: root
-    host: localhost 
-    password: database
-
-- name: remove the test database
-  mysql_db: 
-    name: test
-    state: absent
-
-- name: update mysql root password for all root accounts
-  mysql_user: 
-    name: root 
-    host: "{{ item }}"
-    password: database
+- name: copy the script for DB mysql_secure_installation
+  copy: 
+    src: "{{item}}" 
+    dest: /home/test/Desktop/
   with_items:
-    - localhost
-    - 127.0.0.1
-    - ::1
+    - mysql_secure_installation.sh
+    - database_creation.sh
 
-- name: Create database user with name and password with all database privileges
-  mysql_user:
-    name: wordpressuser
-    password: wordpresspassword
-    priv: '*.*:ALL'
-    state: present
+- name: Execute the secureinstalaltion code and Database creation code
+  shell: mysql_secure_installation.sh >> secure_db.txt
+  args:
+    chdir: /home/test/Desktop/
 
-- name: Create user defined databases
-  mysql_db:
-    name: wordpress
-    login_user: root
-    login_password: database
-    state: present
-  register: db_creation
+- name: Execute the secureinstalaltion code and Database creation code
+  shell: database_creation.sh >> db_creation.txt
+  args:
+    chdir: /home/test/Desktop/
+
