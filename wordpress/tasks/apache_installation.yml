@@ -1,0 +1,38 @@
+- name: httpd installation
+  yum: 
+    name: httpd
+    state: latest
+
+- name: download latest wordpress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /var/www/html/
+    mode: '0744'
+
+- name: unarchive downloaded wordpress site
+  unarchive:
+    src: /var/www/html/latest.tar.gz
+    dest: /var/www/mandjiny.com/public_html/
+    remote_src: yes
+    creates: yes
+  register: wordpress
+
+- name: copy to the correct virtual hostname folder to access the files
+  copy:
+    src: /var/www/html/wordpress
+    dest: /var/www/mandjiny.com/public_html/
+    remote_src: yes
+    creates: yes
+
+- name: enable firewall ports for public
+  shell: |
+    sudo firewall-cmd --permanent --zone=public --add-service=http
+    sudo firewall-cmd --permanent --zone=public --add-service=https
+    sudo firewall-cmd --reload
+
+- name: copying the wp-config.php which has updated db name and db passowrd. 
+  copy:
+    src: wp-config.php
+    dest: /var/www/mandjiny.com/public_html/
+  notify:
+    - restart httpd and mariadb
