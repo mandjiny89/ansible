@@ -11,7 +11,7 @@
   tasks:
     - name: Add the new users for CommVault
       user:
-        name: Bkp_usr
+        name: bkp_usr
         uid: 6102
         create_home: yes
         shell: /bin/bash
@@ -39,11 +39,3 @@
       with_items:
         - chage -d 0 Bkp_usr
 
-    - name: Giving sudo permissions
-      lineinfile:
-        path: "/etc/sudoers"
-        state: present
-        line: "{{item}}"
-      with_items:
-          - michal.plandor      ALL=(ALL)       ALL
-          - rohit.khanna        ALL=(ALL)       ALL
