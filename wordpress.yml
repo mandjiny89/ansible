@@ -1,0 +1,7 @@
+---
+# Wordpress site playbook
+- hosts: node2
+  become: true
+  gather_facts: fales
+  roles:
+  - wordpress

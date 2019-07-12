@@ -1,0 +1,106 @@
+---
+- name: mariadb installation 
+  yum:
+    name: mariadb-server
+    state: latest
+
+- name: enable httpd services using systemd
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: copy mysql_secure_installation
+  copy:
+    src: "{{item}}"
+    dest: /home/test/Desktop
+    mode: '0777'
+  with_items:
+    - mysql_secure_installation.sh
+    - database_creation.sh
+    - db_setup.sh
+  tags:
+    - test3
+
+- name: copy mysql_secure_installation
+  copy:
+    src: "{{item}}"
+    dest: /home/test/Desktop/
+    mode: '0777'
+  with_items:
+    - test.sh
+  tags:
+    - test
+
+- name: fuck this should work
+  command: sh /home/test/Desktop/test.sh
+  register: show
+  tags:
+    - test1
+
+- name: show
+  debug:
+    msg: "{{item}}"
+  with_items:
+    - show1
+    - show2
+  tags:
+    - test2
+
+- name: execute the mariadb installation
+  command: sh /home/test/Desktop/db_setup.sh
+  register: show1
+  tags:
+    - secure
+
+- name: execute the create database
+  command: sudo /home/test/Desktop/database_creation.sh
+  register: show2
+  tags:
+    - db 
+    
+#- name: mariadb mysql_secure_installation automation script, on the code what I am doing is feeding all the below command into mysql using <<
+#  command: ./home/test/ansible/wordpress/files/db_setup.sh
+#  tags:
+#    - secure
+
+#- name: mariadb database creation automation script, on the code what I am doing is feeding all the below command into mysql using <<
+#  script: database_creation.sh
+#  shell: ./home/test/ansible/wordpress/files/database_creation.sh
+#  tags:
+#    - db
+
+#- name: Install expect tool if you want to use, It will be used to talk with the interactive programs like mysql
+#  yum:
+#    name: expect
+#    state: latest
+
+#- name: mariadb mysql_secure_installation automation script, on the code what I am doing is feeding all the below command into mysql using <<
+#  shell:
+#    cmd: |
+#      mysql --user=root <<_EOF_
+#      UPDATE mysql.user SET Password=PASSWORD('${database}') WHERE User='root';
+#      DELETE FROM mysql.user WHERE User='';
+#      DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+#      DROP DATABASE IF EXISTS test;
+#      DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+#      FLUSH PRIVILEGES;
+#      _EOF_
+#  notify:
+#    - restart httpd and mariadb
+#  tags:
+#    - secure
+
+#- name: mariadb database creation automation script, on the code what I am doing is feeding all the below command into mysql using <<
+#  shell: 
+#    cmd: |
+#      mysql --user=root -pdatabase <<_EOF
+#      CREATE DATABASE wordpress CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+#      GRANT ALL ON wordpress.* TO 'wordpressuser'@'localhost' IDENTIFIED BY 'wordpresspassword';
+#      FLUSH PRIVILEGES;
+#      exit
+#      _EOF_
+#  notify:
+#    - restart httpd and mariadb
+#  tags:
+#    - dbcreation

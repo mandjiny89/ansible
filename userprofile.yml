@@ -1,0 +1,18 @@
+---
+#This YAML file is to modify the user data in BOTP landscape. 
+- hosts: node1
+  remote_user: test
+  become: yes
+  gather_facts: yes
+  vars: 
+    user_password: "$6$ansible$IwSzE2RB6pzfc2byyIu48zaAvIvKcw9Y8bTsRaFkULlU0I5eV3w5zzGX5NfPSgO/lMmToxL/0YbaPaxUU9LaJ0"
+
+  tasks:
+    - name: Giving sudo permissions
+      lineinfile:
+        path: "/etc/sudoers"
+        state: present
+        line: "{{item}}"
+      with_items:
+          - michal.plandor	ALL=(ALL)	ALL
+          - rohit.khanna	ALL=(ALL)	ALL   

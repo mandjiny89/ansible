@@ -1,0 +1,61 @@
+---
+# This task is to deploy a full functioning wordpress site using ansible.
+#- name: upgrade all packages
+#  yum:
+#    name: '*'
+#    state: latest
+#  tags:
+#    - upgrade
+
+- name: Download and install lastet Remi repository
+  yum:
+    name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    state: latest
+  tags:
+    - remi
+
+- name: Install httpd server package
+  yum: 
+    name: "{{item}}"
+    state: latest
+  loop:
+    - httpd 
+    - mariadb
+    - mariadb-server
+    - php
+    - php-common
+    - php-mysql 
+    - php-gd
+    - php-xml
+    - php-mbstring
+  tags:
+    - yumall
+  register: packages
+
+- name: list all the softwares
+  debug:
+    msg: "{{packages}}"
+  ignore_errors: true 
+
+- name: Get the wordpress url 
+  get_url:
+    url: https://en-gb.wordpress.org/latest-en_GB.tar.gz
+    dest: /var/www/html/
+    mode: '750'
+
+- name: Unarchive the downloaded file
+  unarchive:
+    src: /var/www/html/wordpress-5.2.2-en_GB.tar.gz
+    dest: /var/www/html/
+    remote_src: yes 
+  notify:
+    - systemctl restart
+  tags:
+    - unarchive
+
+- name: html file movement
+  copy:
+    src: wordpress.html
+    dest: /var/www/html/
+  notify: 
+    - systemctl restart

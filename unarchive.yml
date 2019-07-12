@@ -1,0 +1,21 @@
+---
+- hosts: node1
+  become: true
+  gather_facts: true
+  tasks:
+    - name: unarchive
+      unarchive:
+        src: /var/www/html/latest.tar.gz
+        dest: /var/www/mandjiny.com/public_html/word
+        remote_src: yes
+      register: wordpress
+
+    - name: registered value
+      debug: 
+        msg: "{{ wordpress }}"
+
+# name: load register file name
+# copy:
+#   src: /var/www/html/wordpress
+#   dest: /var/www/html/
+#   remote_src: yes

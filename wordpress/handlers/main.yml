@@ -1,0 +1,9 @@
+---
+- name: restart httpd and mariadb
+  systemd:
+    name: "{{item}}"
+    state: reloaded
+    enabled: yes
+  with_items:
+    - httpd
+    - mariadb

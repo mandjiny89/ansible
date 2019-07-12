@@ -1,0 +1,16 @@
+- name: install epel-release
+  yum:
+    name: "{{item}}"
+    state: latest
+  loop:
+    - epel-release
+    - yum-utils
+    - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+- name: enable REMI repo
+  shell: yum-config-manager --enable remi-php73
+  register: result
+
+- name: Print remi changes
+  debug: 
+    msg: "{{result}}"

@@ -1,0 +1,49 @@
+---
+#This YAML file is to modify the user profile in BOTP landscape. 
+
+- hosts: node1 
+  remote_user: test
+  become: yes
+  gather_facts: yes
+  vars: 
+    user_password: "$6$ansible$IwSzE2RB6pzfc2byyIu48zaAvIvKcw9Y8bTsRaFkULlU0I5eV3w5zzGX5NfPSgO/lMmToxL/0YbaPaxUU9LaJ0"
+
+  tasks:
+    - name: Add the new users for CommVault
+      user:
+        name: Bkp_usr
+        uid: 6102
+        create_home: yes
+        shell: /bin/bash
+        state: present
+        update_password: on_create
+        password: "{{user_password}}"
+      register: user_creation
+    - debug: 
+        msg: "{{user_creation}}"
+
+    - name: Deleting the existing bkp_user
+      user:
+        name: bkp_user
+        state: absent
+        remove: yes
+        
+    - name: Giving sudo permissions
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: 'Bkp_usr	        ALL=(ALL)	ALL'
+        
+    - name: This is to ask user to change the password at login
+      shell: "{{item}}"
+      with_items:
+        - chage -d 0 Bkp_usr
+
+    - name: Giving sudo permissions
+      lineinfile:
+        path: "/etc/sudoers"
+        state: present
+        line: "{{item}}"
+      with_items:
+          - michal.plandor      ALL=(ALL)       ALL
+          - rohit.khanna        ALL=(ALL)       ALL

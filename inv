@@ -1,0 +1,11 @@
+localhost
+
+[web]
+node1
+
+[db]
+node2
+
+[ubuntu]
+node3
+

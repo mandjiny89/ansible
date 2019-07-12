@@ -1,0 +1,59 @@
+---
+- name: mariadb installation 
+  yum:
+    name: "{{item}}"
+    state: latest
+  loop:
+    - mariadb
+    - mariadb-server
+    - python2-PyMySQL.noarch
+    - python36-PyMySQL.noarch
+    - MySQL-python
+
+- name: enable httpd services using systemd
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: update mysql root password for all root accounts
+  mysql_user: 
+    name: root 
+    host: localhost 
+    password: database
+
+- name: update mysql root password for all root accounts
+  mysql_user: 
+    name: root
+    host: localhost 
+    password: database
+
+- name: remove the test database
+  mysql_db: 
+    name: test
+    state: absent
+
+- name: update mysql root password for all root accounts
+  mysql_user: 
+    name: root 
+    host: "{{ item }}"
+    password: database
+  with_items:
+    - localhost
+    - 127.0.0.1
+    - ::1
+
+- name: Create database user with name and password with all database privileges
+  mysql_user:
+    name: wordpressuser
+    password: wordpresspassword
+    priv: '*.*:ALL'
+    state: present
+
+- name: Create user defined databases
+  mysql_db:
+    name: wordpress
+    login_user: root
+    login_password: database
+    state: present
+  register: db_creation
