@@ -14,5 +14,5 @@
         state: present
         line: "{{item}}"
       with_items:
-          - michal.plandor	ALL=(ALL)	ALL
-          - rohit.khanna	ALL=(ALL)	ALL   
+          - mich        ALL=(ALL)	ALL
+          - kha 	ALL=(ALL)	ALL   
