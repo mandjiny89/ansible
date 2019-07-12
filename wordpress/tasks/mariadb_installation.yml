@@ -25,12 +25,13 @@
     - database_creation.sh
 
 - name: Execute the secureinstalaltion code and Database creation code
-  shell: mysql_secure_installation.sh >> secure_db.txt
+  shell: ./mysql_secure_installation.sh
   args:
     chdir: /home/test/Desktop/
+  ignore_errors: true
 
 - name: Execute the secureinstalaltion code and Database creation code
-  shell: database_creation.sh >> db_creation.txt
+  shell: ./database_creation.sh
   args:
     chdir: /home/test/Desktop/
-
+  ignore_errors: true
