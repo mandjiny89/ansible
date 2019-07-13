@@ -76,8 +76,8 @@
 
 - name: enable firewall ports for public
   shell: |
-    sudo firewall-cmd --permanent --zone=public --add-service=http
-    sudo firewall-cmd --permanent --zone=public --add-service=https
-    sudo firewall-cmd --reload
+    firewall-cmd --permanent --zone=public --add-service=http
+    firewall-cmd --permanent --zone=public --add-service=https
+    firewall-cmd --reload
   tags:
     - firewall
