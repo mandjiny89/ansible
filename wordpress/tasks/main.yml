@@ -1,8 +1,8 @@
 ---
 # tasks file for wordpress
 
-#- include: centos_update.yml
-#- include: repo_installation.yml
-#- include: php_installation.yml
-#- include: mariadb_installation.yml
+- include: centos_update.yml
+- include: repo_installation.yml
+- include: php_installation.yml
+- include: mariadb_installation.yml
 - include: apache_installation.yml
