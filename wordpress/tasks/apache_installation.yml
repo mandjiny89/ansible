@@ -13,7 +13,7 @@
 
 - name: unarchive downloaded wordpress site
   unarchive:
-    src: /var/www/html/latest.tar.gz
+    src: /var/www/html/wordpress-5.2.2.tar.gz
     dest: /var/www/mandjiny.com/public_html/
     remote_src: yes
     creates: yes
