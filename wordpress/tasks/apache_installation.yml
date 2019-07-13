@@ -2,6 +2,8 @@
   yum: 
     name: httpd
     state: latest
+  notify: 
+    - restart httpd and mariadb
 
 - name: download latest wordpress
   get_url:
@@ -15,20 +17,23 @@
     dest: /var/www/mandjiny.com/public_html/
     remote_src: yes
     creates: yes
-  register: wordpress
+    owner: apache
+    group: apache
 
 - name: copy to the correct virtual hostname folder to access the files
   copy:
-    src: /var/www/html/wordpress
+    src: /var/www/html/wordpress/
     dest: /var/www/mandjiny.com/public_html/
     remote_src: yes
     creates: yes
 
-- name: enable firewall ports for public
-  shell: |
-    sudo firewall-cmd --permanent --zone=public --add-service=http
-    sudo firewall-cmd --permanent --zone=public --add-service=https
-    sudo firewall-cmd --reload
+
+- name: copying the mandjiny.com.conf file in the httpd configuraiton.
+  copy:
+    src: mandjiny.com.conf
+    dest: /etc/httpd/conf.d/
+  notify:
+    - restart httpd and mariadb
 
 - name: copying the wp-config.php which has updated db name and db passowrd. 
   copy:
@@ -36,3 +41,17 @@
     dest: /var/www/mandjiny.com/public_html/
   notify:
     - restart httpd and mariadb
+
+#- name: copying the updated index.html file
+#  copy:
+#    src: index.html
+#    dest: /var/www/mandjiny.com/public_html/
+#  notify:
+#    - restart httpd and mariadb
+
+- name: enable firewall ports for public
+  shell: |
+    sudo firewall-cmd --permanent --zone=public --add-service=http
+    sudo firewall-cmd --permanent --zone=public --add-service=https
+    sudo firewall-cmd --reload
+
