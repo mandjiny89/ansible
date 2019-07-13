@@ -9,24 +9,46 @@
   get_url:
     url: https://wordpress.org/latest.tar.gz
     dest: /var/www/html/
-    mode: '0744'
+    mode: '0755'
 
 - name: unarchive downloaded wordpress site
   unarchive:
     src: /var/www/html/wordpress-5.2.2.tar.gz
-    dest: /var/www/mandjiny.com/public_html/
+    dest: /var/www/html/
     remote_src: yes
-    creates: yes
-    owner: apache
-    group: apache
+    owner: test
+    group: test
+
+- name: creating virualhost for website
+  file:
+    path: /var/www/mandjiny.com/
+    state: directory
+    owner: test
+    group: test
+    mode: '0755'
+  tags:
+    - virtual
+
+- name: creating virualhost for website
+  file: 
+    path: /var/www/mandjiny.com/public_html/
+    state: directory
+    owner: test
+    group: test
+    mode: '0755'
+  tags:
+    - virtual
 
 - name: copy to the correct virtual hostname folder to access the files
   copy:
     src: /var/www/html/wordpress/
     dest: /var/www/mandjiny.com/public_html/
+    owner: test
+    group: test
+    mode: '0755'
     remote_src: yes
-    creates: yes
-
+  tags:
+    - rest
 
 - name: copying the mandjiny.com.conf file in the httpd configuraiton.
   copy:
@@ -34,6 +56,8 @@
     dest: /etc/httpd/conf.d/
   notify:
     - restart httpd and mariadb
+  tags: 
+    - rest
 
 - name: copying the wp-config.php which has updated db name and db passowrd. 
   copy:
@@ -41,7 +65,8 @@
     dest: /var/www/mandjiny.com/public_html/
   notify:
     - restart httpd and mariadb
-
+  tags: 
+    - rest
 #- name: copying the updated index.html file
 #  copy:
 #    src: index.html
@@ -54,4 +79,5 @@
     sudo firewall-cmd --permanent --zone=public --add-service=http
     sudo firewall-cmd --permanent --zone=public --add-service=https
     sudo firewall-cmd --reload
-
+  tags:
+    - firewall
