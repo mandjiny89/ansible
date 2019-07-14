@@ -1,5 +1,7 @@
 ---
-# tasks file for wordpress
+# Building a wordpress site through ansible
+# Created multiple tasks and running as per the requirment
+# Date 14/07/2019 
 
 - include: centos_update.yml
 - include: repo_installation.yml

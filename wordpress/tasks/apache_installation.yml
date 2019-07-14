@@ -1,3 +1,8 @@
+---
+# Building a wordpress site through ansible
+# Created multiple tasks and running as per the requirment
+# Date 14/07/2019
+
 - name: httpd installation
   yum: 
     name: httpd
@@ -67,13 +72,6 @@
     - restart httpd and mariadb
   tags: 
     - rest
-#- name: copying the updated index.html file
-#  copy:
-#    src: index.html
-#    dest: /var/www/mandjiny.com/public_html/
-#  notify:
-#    - restart httpd and mariadb
-
 - name: enable firewall ports for public
   shell: |
     firewall-cmd --permanent --zone=public --add-service=http
