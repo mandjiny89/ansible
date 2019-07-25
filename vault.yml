@@ -1,0 +1,23 @@
+---
+# Vault example, when you add the variable in vault make sure you use hash key to use in password section. 
+# If you use plain text it will not accept
+- hosts: node2
+  remote_user: test
+  become: yes
+  gather_facts: yes
+  
+  vars_files:
+    - /home/test/vaultkey
+  tasks:
+    - name: creating a valut test user
+      user:
+        name: vault
+        password: "{{ password }}"
+
+    - name: finding the vaule in vault
+      lineinfile:
+        path: /home/test/data.txt
+        create: yes
+        line: "{{ password }}"
+        remote_src: yes
+      no_log: true
