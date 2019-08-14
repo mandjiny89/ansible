@@ -2,7 +2,7 @@
 
 # Fully working  Wordpress site playbook
 # Reference Link for manual installation: https://linuxize.com/post/how-to-install-wordpress-with-apache-on-centos-7/
-- hosts: node2
+- hosts: node1
   become: true
   gather_facts: fales
   roles:
