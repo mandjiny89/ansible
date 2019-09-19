@@ -11,7 +11,7 @@
   tasks:
     - name: Add the new users for CommVault
       user:
-        name: bkp_usr
+        name: backup_user
         uid: 6102
         create_home: yes
         shell: /bin/bash
@@ -24,7 +24,7 @@
 
     - name: Deleting the existing bkp_user
       user:
-        name: bkp_user
+        name: back_user
         state: absent
         remove: yes
         
@@ -32,10 +32,10 @@
       lineinfile:
         path: /etc/sudoers
         state: present
-        line: 'Bkp_usr	        ALL=(ALL)	ALL'
+        line: 'backup_user	        ALL=(ALL)	ALL'
         
     - name: This is to ask user to change the password at login
       shell: "{{item}}"
       with_items:
-        - chage -d 0 Bkp_usr
+        - chage -d 0 backup_user
 
