@@ -6,13 +6,13 @@
   become: yes
   gather_facts: yes
   vars: 
-    user_password: "$6$ansible$IwSzE2RB6pzfc2byyIu48zaAvIvKcw9Y8bTsRaFkULlU0I5eV3w5zzGX5NfPSgO/lMmToxL/0YbaPaxUU9LaJ0"
+    user_password: "$PaxUU9LaJ0"
 
   tasks:
     - name: Add the new users for CommVault
       user:
-        name: backup_user
-        uid: 6102
+        name: user_name
+        uid: 6000
         create_home: yes
         shell: /bin/bash
         state: present
@@ -24,7 +24,7 @@
 
     - name: Deleting the existing bkp_user
       user:
-        name: back_user
+        name: bkp_user
         state: absent
         remove: yes
         
@@ -32,10 +32,10 @@
       lineinfile:
         path: /etc/sudoers
         state: present
-        line: 'backup_user	        ALL=(ALL)	ALL'
+        line: 'user_name	        ALL=(ALL)	ALL'
         
     - name: This is to ask user to change the password at login
       shell: "{{item}}"
       with_items:
-        - chage -d 0 backup_user
+        - chage -d 0 user_name
 

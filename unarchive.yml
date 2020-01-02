@@ -14,8 +14,3 @@
       debug: 
         msg: "{{ wordpress }}"
 
-# name: load register file name
-# copy:
-#   src: /var/www/html/wordpress
-#   dest: /var/www/html/
-#   remote_src: yes
